@@ -1,0 +1,42 @@
+%!TEX root = ../index.tex
+
+%
+% Related work
+%
+
+\section{Related Work}
+
+The lack of applications portability in Cloud Computing has been identified as a major issue by growing companies, known as `lock-in syndrome', becoming one of the main factors when opting, or not, for a Cloud Provider, the industry realized this issue and started what is known as OpenStack\footnote{http://www.openstack.org/ - seen on December 2013}.
+
+\textbf{OpenStack} is an open source cloud computing platform initiative founded by Rackspace Hosting and NASA. It has grown to be \textit{de facto} standard of massively scalable open source cloud operating system. There is an underlying illusion that is the fact that you still have to use OpenStack in order to have portability, it is just a more generalized and free version of the `lock-in syndrome'. Other solutions are:
+\begin{itemize}
+  \item \textbf{Eucalyptus} - is a free and open source software to build Amazon Web Services Cloud like architectures for a private and/or hybrid Clouds. From the three solutions described, Eucalyptus is the one that is more deeply entangled with the concept of a normal Cloud, packing a: Client-side API, a Cloud Controller, S3 storage compliant modules, a cluster controller and a node controller.
+  \item \textbf{IEEE Intercloud} - pushes forward a new Cloud Computing design pattern, with the possibility to federate several clouds operated by enterprise or other providers, increasing the scalability and portability of applications.
+  \item \textbf{pkgcloud} - is an open source standard library that abstracts differences between several cloud providers, by offering a unified vocabulary for services like storage, compute, DNS, load balancers, so the application developer does not have to be concerned with creating different implementations for each cloud.
+\end{itemize}
+
+One interesting aspect that we want to remark is that the more recent solutions look for interoperability through abstraction and not by enforcing a specif stack.
+
+Another trend in Cloud Computing are the Community Clouds, where computing resources might be shared and traded through the available network or through a Community Network, where individuals can build their own data links, this is also known as ``bottom-up networking''. CONFINE~\cite{Navarro} is an European effort that has the goal to federate existing community networks, creating an experimental testbed for research on community owned local IP networks. From this project, resulted Community-Lab,\footnote{http://community-lab.org/ - seen on December 2013} a federation between guifi.net, AWMN and FunkFeuer (community network from Vienna and Graz, Austria).
+
+Volunteered resource sharing networks enable the cooperation between individuals to solve higher degree computational problems, by sharing idle resources that otherwise would be wasted. The type of computations performed in this Application-level networks (ALN), are possible thanks to the definition of the problem in meta-heuristics, describing it with as laws of nature~\cite{Duda2013}. This process creates small individual sets of units of computation, known as `bag of tasks', easy to distribute through several machines in and executed in parallel.
+
+In order to increase the flexibility of the jobs executed by the volunteered resources, the concept of Gridlet~\cite{Costa2012}~\cite{Rodrigues} appears as an unit of workload, combining the data with the logic needed to perform the computation in one package.
+
+One of the main focuses with the proposed work, is to take advantage of the more recent developments of the Web platform to make the intended design viable, the system depends on very lower level components such as:
+\begin{itemize}
+  \item High dynamic runtime for ongoing updates to the platform and specific assets for job execution, using JavaScript~\cite{Ecma2009}, an interpreted language with an high dynamic runtime, has proven to be the right candidate for a modular Web Platform, enabling applications to evolve continuously over time, by simply changing the pieces that were updated. \textbf{HTTP2.0}~\cite{Thomson2013} also plays a important role towards this goal with differential updates, binary framing and prioritization of data frames.
+  \item Close-to-native performance for highly CPU-bound jobs. This is achieve through \textbf{Emscripten}~\cite{Zakai2011}, a LLVM(Low Level Virtual Machine) to JavaScript compiler, enabled native performance on Web apps by compiling any language that can be converted to LLVM bytecode, for example C/C++, into JavaScript.
+  \item Peer-to-peer interconnectivity with \textbf{WebRTC}\cite{IanHickson2013}, a technology being developed by Google, Mozilla and Opera, with the goal of enabling Real-Time Communications in the browser via a JavaScript API.
+  \item Scalable storage and fast indexing with \textbf{`level.js'}, an efficient way to store larger amounts of data in the browser machine persistent storage, its implementation works as an abstraction on top of the leveldown API on top of IndexedDB~\cite{Recommendation2013}, which in turn is implemented on top of the LevelDB, an open source on-disk key-value store inspired by Google BigTable.
+\end{itemize}
+
+% \cite{JeffreyDean;SanjayGhemawat}
+
+\textbf{Previous attempts on cycle sharing through web platform: }
+The first research of browser-based distributed cycle sharing was performed by Juan-J. Merelo, et. al., which introduced a Distributed Computation on Ruby on Rails framework~\cite{Merelo2007}. The system used a client-server architecture in which clients, using a browser would connect to a endpoint, where they would download the jobs to be executed and sent back the results. In order to increase the performance of this system, a new system~\cite{Duda2013} of browser-based distributed cycle sharing was creating using Node.js as a backend for very intensive Input/Output operations~\cite{Tilkov2010}, with the goal of increased efficiency, this new system uses normal webpages (blogs, news sites, social networks) to host the client code that will connect with the backend in order to retrieve and execute the jobs, while the user is using the webpage, this concept is known as parasitic computing~\cite{Barabasi2001}, where the user gets to contribute with his resources without having to know exactly how, however since it is Javascript code running on the client, any user has access to what is being processed and evaluate if it presents any risk to the machine.
+
+
+\textbf{Analysis and discussion: }
+%
+The concept of Gridlet, akin to those seen as well in state of the art databases such as Joyent's Manta,\footnote{http://www.joyent.com/products/manta - seen in December 2013} which bring the computation to/with the data, reducing the possibility of a network bottleneck and increases the flexibility to use the platform for new type of jobs, will very important. To enable this new Cloud platform on using browsers, it is important to understand how to elastically scale storage and job execution, as in~\cite{Silva2011}, but in peer-to-peer networks: therefore a study of the current algorithms and its capabilities was needed. Lastly, browsing the web is almost as old as the Internet itself, however on the last few years, we are seeing the Web Platform rapidly changing, and enabling new possibilities with peer-to-peer technology e.g. WebRTC; otherwise, it would not be possible to create browserCloud.js. 

@@ -1,0 +1,38 @@
+%!TEX root = ../index.tex
+
+%
+% Conclusions
+%
+
+\section{Conclusions}
+
+We end this report, making an overview and summing up all the primary aspects, from proposed work, contributions, state of the art, definition of the architecture, implementation of the respective architecture and evaluation, moving to what were the major breakthroughs and ending with concluding remarks and future work.
+
+People sharing resources is one of the oldest sociological behaviors in human history, however although some known attempts as SETI@HOME (even if extended with nuBOINC) have enabled that for our computer machinery, the level of friction that has to be made in order for a user to join, has been significantly high to cause a great user adoption. On the other hand, Open Cloud stacks have been evolving, providing nowadays the most reliable and distributed systems performance, having a bigger adoption even if the resources are geographically more distant or expensive.
+
+browserCloudjs was an exercise to strive towards a federated community cloud, enabling its users to share effectively their resources, giving developers a reliable and efficient way to store and process data for their applications.
+
+When it came to architecture decisions, we knew that we wanted to built browserCloudjs on top of the most recent web technologies and on top of the Web Platform, the most ubiquitous platform. There were two reasons behind this decision, the first being longevity, the Web Platform, even though it is quite popular, it is still an emerging platform, meaning that our assumptions of ubiquity will previal; the second reason was developer adoption, JavaScript is the "lingua franca" of the web, meaning that it will be common for a developer to know how to code with JavaScripts APIs and since browserCloudjs was built in JavaScript, developers will know inherently how to use the platform.
+
+Going after a decentralized model was also something we saw as a potential key factor for the browserCloudjs platform, structured peer-2-peer networks scale well with demand, while centralized networks have a number of significant challenges once a certain threshold of users is reached. WebRTC, the technology enabling browsers to communicate in a peer-2-peer way, is in great part responsible for this platform success.
+
+With browserCloudjs, we achieved in bulk, mainly two great milestones:
+
+\begin{itemize}
+    \item \textbf{The first browser based DHT} - browserCloudjs offers for the first time in browser history a fully functional DHT, performing resource decentralized resource discovery on the browser. 
+    \item \textbf{The first peer-2-peer browser computing platform} - the research of using browsers to leverage the idle computer cycles have been in the literature for a while, however, always following the centralized/BOINC model. browserCloudjs offers the first peer-2-peer browser computing framework with proven speedups.
+\end{itemize}
+
+We have found this thesis to be a source of hard work and enthusiasm, a great opportunity to research and interact with bleeding edge technologies and also, interact with the developer communities that are pushing the web forward. From this work results a collection of items that we see as future work, described in the following section.
+
+\subsection{Future Work}
+
+As future work for our research, we've identified some areas that we believe that would contribute to the goal of the platform, these are:
+
+\begin{itemize}
+    \item New job strategies - Currently browserCloudjs only supports mapping jobs, however, there is no pratical limitation to execute full map/reduce jobs and/or streaming functions (for realtime data scenarios).
+    \item Hybrid peers - peers that live inside of a server that can both act as a signalling server and stabilizing the network when the churn rate is high.
+    \item Geographic distribuiton awareness - Select finger tables based in optimal RTT distribution and geographic positioning of peers.
+    \item Optimization of the JavaScript code developed - Increasing the performance of crucial functions.
+    \item Continuous upgrade of browserCloudjs platform as the Web Platform APIs evolve and as WebRTC moves from the draft state to finished spec.
+\end{itemize}

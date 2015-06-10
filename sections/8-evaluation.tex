@@ -13,12 +13,10 @@ In this chapter, we go through our qualitative and quantitative evaluation of br
 In a qualitative perspective, browserCloudjs performs successfully the following:
 
 \begin{itemize}
-    \item Efficient resource discovery through peer-2-peer routing over a structured overlay network, using a DHT.
-    \item Distribute Jobs through the peers available, submiting, coordinating and aggregating the results.
+    \item Efficient resource discovery through peer-to-peer routing over a structured overlay network, using a DHT.
     \item Remove the need for centralized indexes or points of control. There is still a need of a rendezvous point to enable new peer joins, however the data transmited, computed and stored inside the network is peers responsability.
     \item Enable every machine equiped with a WebRTC enabled browser to be part of a browserCloudjs instance. In 2013, the number of WebRTC capable devices already exceed one billion\footnote{Google I/O presentation in 2013 - https://bloggeek.me/webrtc-next-billion/}
     \item Enable peers to both participate and contribute to a job and at the same time submiting and requesting the network to process their own.
-    \item Enable browsers to be part of one or more browserCloudjs instance.
     \item browserCloudjs' Job Scheduler is job agnostic, this means that different types of jobs can be executed on demand without any previous configuration or preparation.
     \item browserCloudjs solves the decentralized communication problem between browsers in a scalable way, giving the opportunity for new scenarios to be developed on top of it through its modular and pluggable approach.
 \end{itemize}
@@ -124,15 +122,4 @@ It is important to note that in Figure~\ref{fig:avgtimeexec}, we can see several
 
 As we have discussed in the previous subsections, we did managed to reach significant speedup between 2 and close to 5 times for our experiment, using only volunteer resources, that is a reduction between 50\% and 76\%.
 
-When distributing a job through a multiple node network, one of the aspects we observed was that we can influence overall efficiency by adjusting how much resources we are going to take from the network to process the job, in this case, how much browsers. We also can influence it by deciding how much fine-grained each task it will be: the smaller the computation unit, the more we can distribute tasks through the network, with a natural trade-off of adding more task generation and messaging overhead, with diminishing returns when more and more, and smaller tasks are created. This has led us to understand and consider the opportunity for a premature job optimization tool, where a job would be particioned and distributed, depending on its size and complexity, with the goal of meeting the optimal point of the trade-off.
-
-There are also some other performance bottlenecks we noticed that arise from the single threaded nature of JavaScript engines. These aspects are considered in our performance evaluation, such as:
-
-\begin{itemize}
-  \item Logging - Since V8 runs in a single thread, any synchronous operation will block the event loop and add delay to the whole processing, although these logs are essential for us to assess the efficiency of the infrastructure, they are not vital to the job.
-  \item Delay added - One technique we used to simulate the network delay is to use the `setTimeout' native function of V8's JavaScript implementation, since this function is unable to receive floating millisecond values. Moreover, since `setTimeout' does not necessarily guarantee that the function will be executed in X amount of milliseconds, due to the nature of the event loop, there is always an extra delay added implicitly to the operation in the order of 1 to 3 ms.
-  \item Tasks can not be sent in parallel - A node has to send each individual computing unit sequentially and independently, meaning that if we divide a job into 2000 for e.g, each task will have to wait for the previous to be sent.
-  \item We have noticed a considerable machine resoures bottle neck when we had more than 40 data channels present in same machine - This means that is unviable to levarage the full 48 fingers space our finger table has the capacity, since one fingers equals 2 data channels (one in and one out).
-\end{itemize}
-
-These bottlenecks were studied and will be tackled in future work, one of the solutions proposed is to use Service Workers\footnote{http://www.w3.org/TR/2014/WD-service-workers-20141118} for full multithreaded operation inside browserCloud.js.
+When distributing a job through a multiple node network, one of the aspects we observed was that we can influence overall efficiency by adjusting how much resources we are going to take from the network to process the job, in this case, how much browsers. We also can influence it by deciding how much fine-grained each task it will be: the smaller the computation unit, the more we can distribute tasks through the network, with a natural trade-off of adding more task generation and messaging overhead, with diminishing returns when more and more, and smaller tasks are created.

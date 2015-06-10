@@ -17,15 +17,13 @@ browserCloud.js proposes a mechanism to find, gather and utilize idle resources 
 
 A pratical use case for browserCloud.js is high CPU bound jobs and capable to run in parallel, e.g: image processing, video compressing, data manipulation, map and reduce functions, etc. These parallel tasks are divided by the peers available in the network, leveraging the parallelism to obtain a speed up.
 
-This chapter describes the architecture designed for the browserCloud.js system. browserCloud.js was designed with with the Unix philosophy, that is, subtracting the unnecessary from a subsystem until it is constructed to perform one thing and one thing well, building more cohese abstractions through composition.
-
 browserCloud.js was architectured to meet the following requirements:
 
 \begin{itemize}
-    \item \textbf{Membership management} - The system has to enable peers to join and leave a current network of browserCloud.js peers or a subset of it. A peer should only have the knowledge of a small of other peers in the network and be available to rail in any other peer that wants to be part of the P2P network.
-    \item \textbf{Message routing} - Peers must have a way to communicate with every other peer in the network without the necessity of contacting a centralized service to do so. Messages should be routed between peers, having each peer knowing a subset of the network, guaranteeing in full coverage in this manner.
+    \item \textbf{Membership management} - The system has to enable peers to join and leave a current network of browserCloud.js peers or a subset of it.
+    \item \textbf{Message routing} - Messages are be routed between peers, having each peer knowing a subset of the network, guaranteeing in full coverage in this manner.
     \item \textbf{Job scheduling and results aggregation} - The discovery of computational resources must be performed using a distributed approach, peers interact between each other to send tasks and retrieve the results for the peer executing the job.
-    \item \textbf{Support dynamic runtime} - Provide flexibility for jobs being executed. This is delivered thanks to the dynamic runtime offered by by peers in browserCloud.js due to the fact that they are standard compliant web browsers and Javascript is the language used.
+    \item \textbf{Support dynamic runtime} - Provide flexibility for jobs being executed. 
     \item \textbf{Reduced entrance cost to enable greater adoption} - Simple APIs design, abstracting the complexity in favor of greater extendability.
     \item \textbf{Enable integration and compliance tests} - Automate the process of verifying browserCloudjs integrity and functionality.
 \end{itemize}
@@ -65,8 +63,6 @@ A peer join compromisses of the following steps:
 \end{itemize}
 
 A peer leave is a simpler and organic process, once a peer leaves the network, the RTCPeerConnections objects are closed and destroyed, notifying automatically the peers that have to update their finger tables that they should request the signalling server to update the metadata of the state of the network and therefore, issuing new finger-update messages.
-
-The meta state of the network is always held in memory by the signalling server, there is no need to keep this state persistent because it can be easily reconstructed, in the event of the signalling server failing, a new instance can be spawn and the peers simply have to register again, but this time with their current IDs.
 
 \begin{figure}[h!]
   \centering
@@ -154,21 +150,7 @@ The number of fingers and the fingers we use for a given instance of browserClou
 
 \subsection{Resource Management}
 
-Leveraging the browser's dynamic runtime was a feature we pursue from the beginning of the design for browserCloud.js. A job is divided into individual tasks that are a composition of the function to be executed plus the data which should serve as input for that task, creating a transportable gridlet that can be migrated between browsers and executed at its final destination.
-
-\subsubsection{Job Submission}
-
-A job execution is performed using the algorithm as follows:
-
-\begin{itemize}
-    \item 1 - Select how many units we want to divide a job in.
-    \item 2 - Select how many browsers we want to distribute the job to.
-    \item 3 - Query the network for available browsers (e.g. that are not performing other jobs at the moment).
-    \item 4 - Compose the several units (gridlets) with task description plus data partition.
-    \item 5 - Send these gridlets to the network to be routed to the browsers that are going to execute them.
-    \item 6 - Browsers compute the results and send them back to the job issuer.
-    \item 7 - Browser submitting the job gathers all the tasks results and constructs the job result.
-\end{itemize}
+Leveraging the browser's dynamic runtime was a feature we pursue from the beginning of the design for browserCloud.js.
 
 \subsubsection{Job Execution}
 
@@ -184,7 +166,7 @@ A job consists in the partition of tasks which are enriched, with both task code
 
 \subsection{Architecture of the Software stack}
 
-When it comes to software, we divided our browser application appliance into three separate and fundamental components, namely: Communication layer, Service router and Job scheduler, leaving also the opportunity for these to be extended. We can observe a overview of this architecture in Figure~\ref{fig:s-a-n-l}.
+We can observe a overview of this architecture in Figure~\ref{fig:s-a-n-l}.
 
 \begin{figure}[h!]
   \centering
@@ -196,61 +178,21 @@ When it comes to software, we divided our browser application appliance into thr
 
 \subsubsection{Communication layer}
 
-The communication layer is responsible for routing messages between peers and establish a connection with the rendezvous point to perform a peer join/leave. This means that the communication layer:
-
-\begin{itemize}
-    \item Holds the connections with other peers.
-    \item Performs the necessary logic, using fingers, for efficient routing.
-    \item Keeps the peer connected to the network by updating its routing table as necessary
-\end{itemize}
+The communication layer is responsible for routing messages between peers and establish a connection with the rendezvous point to perform a peer join/leave.
 
 \subsubsection{Service router}
 
-The Service router establishes a protocol for modules like the job scheduler to interact with the network of peers, it uses an event driven model, where modules can register listeners to events that happen on the network (such as a specific reception of a message) and react to it. It also offers the necessary API calls for the modules to send messages to the network.
-
-Service router offers extensibility to browserCloud.js, similar to Job scheduler, other modules can be implemented to interact with the already established P2P network.
+The Service router establishes a protocol for modules like the job scheduler to interact with the network of peers, it uses an event driven model, where modules can register listeners to events that happen on the network or send messages.
 
 \subsubsection{Job scheduler}
 
-The Job scheduler benefits the API of the Service router to implement its logic, this means that although a job scheduler was implemented to fit our design purposes, it could easily be replaced by another job scheduler with different offers and guarantees.
+The Job scheduler benefits the API of the Service router to implement its logic.
 
 \subsection{API design}
 
 For the user of browserCloud.js, a simple API was created to perform: peer join, message listening and job scheduling as demonstrated by the following code (which should be interpreted as pseudo-code since the API might change with the release of new versions):
 
-\subsubsection{API calls signatures}
-
-\textit{Function signatures}
-\begingroup
-\scriptsize
-\begin{verbatim}
-    peer.register(); // Register this peer in the network
-
-    peer.participate(<configuration object>);
-    // configuration object should include the URL of the Signalling Server
-    // which serves as a rendezvous point for the browserCloudjs instance 
-    // we want to run our job on.
-
-    peer.execute(<data for the job>, 
-        <task that shall be run for each item on the input data set>,
-        <number of peers we want to distribute our job on>,
-        <callback for when the job is finished>);
-
-\end{verbatim}
-\endgroup
-
-\textit{Events signatures}
-\begingroup
-\scriptsize
-\begin{verbatim}
-    peer.events.on('registered', <callback>);
-    peer.events.on('ready', <callback>);
-    peer.events.on('message', <callback>);
-
-\end{verbatim}
-\endgroup
-
-\subsubsection{API Usage Flow}
+\subsubsection{API Usage}
 
 \textit{Peer join}
 \begingroup
@@ -319,19 +261,13 @@ For the user of browserCloud.js, a simple API was created to perform: peer join,
 
 \subsection{Testing framework requirement}
 
-As an initially only lateral but highly required and useful effort, we have also designed a testing framework, in order to be able to cope with browserCloudjs needs for quality assurance.
-
-There are a panoply of excellent browser testing frameworks and services available today, however their focus is mainly on testing browser implementations, namely CSS, HTML and JavaScript, and user interactions of the apps their are testing (e.g. clicks, mouse movements, what the user sees on the page).
-
-When it comes to testing to test a decentralized browser app or library, the focus stops being how a browser implements a specific behaviour, but how the decentralized network handles node joins and leaves, and whether nodes are effectively communicating between each other. In this scenario, we have several events that the server never sees or that the server never instructs the clients to do, so we need to create a new way to coordinate the browser joins and leaves and also how they interact between each other remotely.
-
-There are a specific set of requirements we needed our testing framework to fulfil, these are:
+When it comes to testing to test a decentralized browser app or library, the focus stops being how a browser implements a specific behaviour, but how the decentralized network handles node joins and leaves, and whether nodes are effectively communicating between each other. For this scenario, we have a specific set of requirements for the framework, these are:
 
 \begin{itemize}
-    \item Have N browsers available, where 1\textless=N\textless=virtually unlimited - Most browser testing services only let one spawn a couple of browsers at a time, our solution aims to launch several browsers and/or tabs to load a webpage.
-    \item Serve a custom web page for the desired test - So that the developer does not have to provision it before hand and for each test.
-    \item Instruct browsers on demand - The ability to send commands to be executed by each browser, depending on the type of test we are running and what events have triggered so far.
-    \item Gather information and evaluate the state as a whole - collect the events and data generated by each browser and assess if the order was correct with pseudo external consistency.
+    \item Have N browsers available, where 1\textless=N\textless=virtually unlimited 
+    \item Serve a custom web page for the desired test 
+    \item Instruct browsers on demand 
+    \item Gather information and evaluate the state as a whole 
 \end{itemize}
 
 \subsubsection{browserCloudjs quality test workflow}
@@ -357,7 +293,7 @@ In order to evaluate that a browserCloudjs instance is working as desired, we ha
 
 browserCloudjs tests are not linear, a message can be routed between any two browsers through several combinations, depending on the current size of the network and the respective IDs of those browsers, which will influence how their finger table looks like.
 
-In Figure~\ref{fig:t-f-2}, we have an example of two browsers communicating between each other. We can see that some of the browsers between them will have the responsibility to forward the message, while others, will be idle. With the design of the testing framework, we wanted to make sure we have a way to take a snapshot of the events that happened in the DHT, so that we can infer if the message was forwarded through the right peers, by analysing each peer finger table.
+In Figure~\ref{fig:t-f-2}, we have an example of two browsers communicating between each other. We can see that some of the browsers between them will have the responsibility to forward the message, while others, will be idle.
 
 \begin{figure}[h!]
   \centering

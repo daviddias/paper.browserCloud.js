@@ -35,26 +35,24 @@ The overview of the distributed architecture can be seen in Figure~\ref{fig:n-a-
   \label{fig:n-a-o}
 \end{figure}
 
-\subsubsection{Entities}
+%\subsubsection{Entities}
 
-There are two different kind of actors in the system:
+There are two different kinds of actors in the system:
 
 \begin{itemize}
     \item browser - The points on our network that will be able to issue jobs, execute tasks and route messages.
     \item rendezvous point - The only centralized component in this architecture, its purpose is for the clients to have a way to connect to and join the overlay network.
 \end{itemize}
 
-\subsubsection{Interaction Protocols}
+%\subsubsection{Interaction Protocols}
 
 In a browserCloud.js infrastructure, we have three main interaction patterns. The first being when a peer joins or leaves the network, membership management. In traditional P2P network, we could simply exchange IP:Port pairs, but in a P2P browser network, a RTCPeerConnection has to be established and kept alive, meaning that an handshaking protocol must be performed. The second pattern is message routing between peers, this has been designed with inspiration on the Chord\cite{Stoica2001},routing algorithm, studied on the related work. The third interaction demonstrates how to levarage the computer cycles available in the network to process CPU bound jobs.
 
-\paragraph{Peer joins and leaves}
-
-A peer join compromisses of the following steps:
+\paragraph{Peer joins and leaves} A peer join compromisses of the following steps:
 
 \begin{itemize}
     \item \textbf{1 - Registration} - When a peer is ready to join the network, it performs the registration action to the custom browserCloud.js signalling server, the server replies with a confirmation and a unique ID for this peer to occupy in the network. This enables the signalling server, which holds the meta data of the current state in the network, to pick the ID in the ID interval that might be less occupied. We can observe this interaction in Figure~\ref{fig:1-p-r}.
-    \item \textbf{2 - New peer available} - As peers join the network, the other peers get notified to establish or update their routing tables, keeping the message routing efficient (explained in the next subsection). For each peer join, a notification with a finger update can be sent to 1 or more peers present, as seen in Figure~\ref{fig:2-p-n}.
+    \item \textbf{2 - New peer available} - As peers join the network, the other peers get notified to establish or update their routing tables, keeping the message routing efficient (explained in the next subsection). For each peer join, a notification with a finger update can be sent to one or more peers present, as seen in Figure~\ref{fig:2-p-n}.
     \item \textbf{3 - Connection establishment between two peers} - In order to establish a connection between two peers, once there is an interest for these to connect, for e.g, in the case of a finger update event. There are two substeps, the first being the SDP offer creation through a step called "hole punching". A browser uses the WebRTC APIs to traverse through NAT to obtain its public IP, which is crucial information when two browsers need to establish a direction connection, Figure~\ref{fig:3-p-s}. The second step is the exchange of these SDP offers between browsers and that has to be performed by a centralized service; in browserCloud.js we developed a custom signalling server that handles that part, as seen in Figure~\ref{fig:4-p-c}.
 \end{itemize}
 
@@ -88,11 +86,9 @@ A peer leave is a simpler and organic process, once a peer leaves the network, t
   \label{fig:4-p-c}
 \end{figure}
 
-\paragraph{Message routing}
+\paragraph{Message routing} For message routing, we designed an adaptation of the Chord routing algorithm, a P2P Structured Overlay network, a DHT studied in the related work, with the goal of keeping an efficient routing and resource lookup with the increase of the number of peers in the network.
 
-For message routing, we designed an adaptation of the Chord routing algorithm, a P2P Structured Overlay network, a DHT studied in the related work, with the goal of keeping an efficient routing and resource lookup with the increase of the number of peers in the network.
-
-The ID namespace available in our DHT consists of 48 bit IDs (Figure~\ref{fig:c-1} ), this decision was made due to the fact that Javascript only supports 53 bit numbers, to support a greater variaty of IDs, we would have to resort to a big integer third party library, adding unnecessary consuption of computing resources. However, for demonstration purposes, we will explain using a 3 bit ID namespace.
+The ID namespace available in our DHT consists of 48 bit IDs (Figure~\ref{fig:c-1}). This decision was made due to the fact that Javascript only supports 53 bit numbers, to support a greater variety of IDs, we would have to resort to a big integer third party library, adding unnecessary consumption of computing resources. However, for demonstration purposes, we will explain using a 3 bit ID namespace.
 
 \begin{figure}[h!]
   \centering
@@ -101,7 +97,7 @@ The ID namespace available in our DHT consists of 48 bit IDs (Figure~\ref{fig:c-
   \label{fig:c-1}
 \end{figure}
 
-In Figure~\ref{fig:c-2}, we have a DHT composed of 4 different peers, with IDs 0, 1, 3 and 6. Each one of these peers will be responsible for a segment of the DHT, in another words what this means is that every message that is destined to their segment, will be delivered to respective peer responsable. A peer is responsible for a segment of IDs greater than the peer that is its predecessor and lesser or equal than its own ID, represented in Figure ~\ref{fig:c-3}. When a peer enters in the network, its ID is generated through a crop of a SHA-1 hash from a random generated number, creating a natural uniform distribution.
+In Figure~\ref{fig:c-2}, we have a DHT composed of 4 different peers, with IDs 0, 1, 3 and 6. Each one of these peers will be responsible for a segment of the DHT. In other words, what this means is that every message that is destined to their segment will be delivered to respective peer responsible. A peer is responsible for a segment of IDs greater than the peer that is its predecessor and lesser or equal than its own ID, represented in Figure ~\ref{fig:c-3}. When a peer enters the network, its ID is generated through a crop of a SHA-1 hash from a random generated number, creating a natural uniform distribution.
 
 \begin{figure}[h!]
   \centering
@@ -117,7 +113,7 @@ In Figure~\ref{fig:c-2}, we have a DHT composed of 4 different peers, with IDs 0
   \label{fig:c-3}
 \end{figure}
 
-In order for messages to find its correct destination, each peer has to know at minimum the peer that is next to it on the DHT, also called "successor" (Figure~\ref{fig:c-4}). Messages will be forward until they reach the peer which compromisses the responsability of being responsible for that message ID.
+In order for messages to find its correct destination, each peer has to know at minimum the peer that is next to it on the DHT, also called "successor" (Figure~\ref{fig:c-4}). Messages will be forwarded until they reach the peer which compromisses the responsability of being responsible for that message ID.
 
 \begin{figure}[h!]
   \centering
@@ -126,7 +122,7 @@ In order for messages to find its correct destination, each peer has to know at 
   \label{fig:c-4}
 \end{figure}
 
-However, as specified earlier in the document, we want to achieve a good and stable efficiency when it comes to routing messages inside the DHT as the network grows. To achieve that, we introduce fingers in our peers as we mentioned earlier. A finger is a direct connection to another peer in the network (Figure~\ref{fig:c-5}), that was picked following a specific distribution, each peer will have 1 to N fingers, where N is the number of bits of the IDs (for this example, N = 3). A finger is always the peer responsible for the "start" value of the interval (see Figure~\ref{fig:c-6} for reference and formula) and a message will be routed to that finger if it falls inside the interval.
+However, as specified earlier in the document, we want to achieve a good and stable efficiency when it comes to routing messages inside the DHT as the network grows. To achieve that, we introduce fingers in our peers, as we mentioned earlier. A finger is a direct connection to another peer in the network (Figure~\ref{fig:c-5}) that was picked following a specific distribution, each peer will have 1 to N fingers, where N is the number of bits of the IDs (for this example, N = 3). A finger is always the peer responsible for the "start" value of the interval (see Figure~\ref{fig:c-6} for reference and formula) and a message will be routed to that finger if it falls inside the interval.
 
 \begin{figure}[h!]
   \centering
@@ -148,7 +144,7 @@ The number of fingers and the fingers we use for a given instance of browserClou
 
 Leveraging the browser's dynamic runtime was a feature we pursue from the beginning of the design for browserCloud.js.
 
-\subsubsection{Job Execution}
+%\subsubsection{Job Execution}
 
 A job consists in the partition of tasks which are enriched, with both task code and data, and sent to other peers to be executed. These tasks, which can be represented as functions (job assets), can be defined in runtime, therefore providing a greater flexibility to the developer that is using this system to run the distributed job they want. We can describe the work performed to schedule a job, by the following algorithm:
 
@@ -172,15 +168,15 @@ We can observe a overview of this architecture in Figure~\ref{fig:s-a-n-l}.
 \end{figure}
 
 
-\subsubsection{Communication layer}
+%\subsubsection{Communication layer}
 
 The communication layer is responsible for routing messages between peers and establish a connection with the rendezvous point to perform a peer join/leave.
 
-\subsubsection{Service router}
+%\subsubsection{Service router}
 
 The Service router establishes a protocol for modules like the job scheduler to interact with the network of peers, it uses an event driven model, where modules can register listeners to events that happen on the network or send messages.
 
-\subsubsection{Job scheduler}
+%\subsubsection{Job scheduler}
 
 The Job scheduler benefits the API of the Service router to implement its logic.
 
@@ -188,7 +184,7 @@ The Job scheduler benefits the API of the Service router to implement its logic.
 
 For the user of browserCloud.js, a simple API was created to perform: peer join, message listening and job scheduling as demonstrated by the following code (which should be interpreted as pseudo-code since the API might change with the release of new versions):
 
-\subsubsection{API Usage}
+%\subsubsection{API Usage}
 
 \textit{Peer join}
 \begingroup
@@ -266,7 +262,7 @@ When it comes to testing to test a decentralized browser app or library, the foc
     \item Gather information and evaluate the state as a whole 
 \end{itemize}
 
-\subsubsection{browserCloudjs quality test workflow}
+%\subsubsection{browserCloudjs quality test workflow}
 
 In order to evaluate that a browserCloudjs instance is working as desired, we have designed the following workflow, which can also be seen in Figure~\ref{fig:t-f-1}:
 
@@ -285,7 +281,7 @@ In order to evaluate that a browserCloudjs instance is working as desired, we ha
   \label{fig:t-f-1}
 \end{figure}
 
-\subsubsection{browserCloudjs quality test assessment}
+%\subsubsection{browserCloudjs quality test assessment}
 
 browserCloudjs tests are not linear, a message can be routed between any two browsers through several combinations, depending on the current size of the network and the respective IDs of those browsers, which will influence how their finger table looks like.
 

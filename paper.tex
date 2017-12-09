@@ -1,29 +1,44 @@
-\documentclass[9.5pt,twocolumn]{./llncs2e/llncs}
-% \usepackage[printonlyused]{acronym}
+\documentclass[sigplan]{acmart}
 \usepackage{graphicx}
 \usepackage{fixltx2e}
 \usepackage{mathtools}
 \usepackage[nolist,nohyperlinks]{acronym}
-% \addtolength\textwidth{3cm}
-\usepackage[margin=1.2cm]{geometry}
+
+\acmDOI{10.1145/3167132.3167366}
+\acmISBN{978-1-4503-5191-1/18/04}
+
+%Conference
+\acmConference[SAC'18]{ACM SAC Conference}{April 9-13, 2018}{Pau, France} 
+\acmYear{2018}
+\copyrightyear{2018}
+
+\acmArticle{4}
+\acmPrice{15.00}
+
 
 % Title
 
 \begin{document}
-\title{browserCloud.js}
-\titlerunning{browserCloud.js}
-\toctitle{browserCloud.js}
+\title{browserCloud.js - A distributed computing fabric powered by a P2P Overlay Network on top of the Web Platform}
 
-\subtitle{A distributed computing fabric powered by a P2P Overlay Network on top of the Web Platform}
-\author{David Dias, mail@daviddias.me and Lu\'{i}s Veiga, luis.veiga@inesc-id.pt}
 
-%\authorrunning{David Dias}
-%\tocauthor{David Dias}
-\institute{T\'{e}cnico Lisboa, University of Lisbon}
+\renewcommand{\shorttitle}{browserCloud.js}
 
-\maketitle
+
+\author{David Dias}
+\affiliation{%
+  \institution{INESC-ID Lisboa\\ULisboa / Instituto Superior T\'{e}cnico}
+}
+\email{mail@daviddias.me}
+
+\author{Lu\'is Veiga}
+\affiliation{%
+  \institution{INESC-ID Lisboa\\ULisboa / Instituto Superior T\'{e}cnico}
+}
+\email{luis.veiga@inesc-id.pt}
 
 \input{sections/1-abstract.tex}
+\maketitle
 \input{sections/2-keywords.tex}
 \input{sections/3-introduction.tex}
 \input{sections/5-related-work.tex}
@@ -32,10 +47,7 @@
 \input{sections/8-evaluation.tex}
 \input{sections/9-conclusions.tex}
 
-% Bibliography
-\tiny
 \bibliographystyle{plain}
 \bibliography{bib.bib}
-
 
 \end{document}

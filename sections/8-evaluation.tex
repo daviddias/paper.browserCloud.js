@@ -11,25 +11,24 @@ In a qualitative perspective, browserCloudjs performs successfully the following
 \begin{itemize}
     \item Efficient resource discovery through peer-to-peer routing over a structured overlay network, using a DHT.
     \item Remove the need for centralized indexes or points of control. There is still a need of a rendezvous point to enable new peer joins, however the data transmited, computed and stored inside the network is peers responsability.
-    \item Enable every machine equiped with a WebRTC enabled browser to be part of a browserCloudjs instance. In 2013, the number of WebRTC capable devices already exceed one billion\footnote{Google I/O presentation in 2013 - https://bloggeek.me/webrtc-next-billion/}
+    \item Enable every machine equiped with a WebRTC enabled browser to be part of a browserCloudjs instance. In 2013, the number of WebRTC capable devices already exceed one billion\footnote{Google I/O presentation - https://bloggeek.me/webrtc-next-billion/}
     \item Enable peers to both participate and contribute to a job and at the same time submiting and requesting the network to process their own.
     \item browserCloudjs' Job Scheduler is job agnostic, this means that different types of jobs can be executed on demand without any previous configuration or preparation.
     \item browserCloudjs solves the decentralized communication problem between browsers in a scalable way, giving the opportunity for new scenarios to be developed on top of it through its modular and pluggable approach.
 \end{itemize}
 
-We have developed a Demo video of browserCloudjs working, this video can be seen at https://www.youtube.com/watch?v=kjwIjoENCR .
 
 \subsection{Quantitative assessment}
 
 In this subsection we evaluate browserCloud.js via real executions on top of increasing number of browsers executing locally, to assess the limits of current Javascript engines on typical desktop machines, and with micro-benchmarks to determine the speedups that can be achieved in distributed executions with one browser per individual desktop machine.
 
-\subsubsection{The setup}
+%\subsubsection{The setup}
 
 In order to assess the potential of the proposed system, we have built a ray-tracing application, adapted from algorithms available, written in full vanilla JavaScript, that can be run on any typical modern browser engine. This algorithm allows us to stress-test the CPU,  and the possibility to obtain advantages through processing parallelism. We need this to understand whether the expected speeds up resulting from distributing the tasks through the browserCloud.js peers network, are not hindered by loosing efficiency due to message routing on the overlay Network.
 
 The setup used during the tests was a system running Chrome version 39 on a Intel Processor Code i7 2.3Ghz with 16Gb of RAM. The STUN server used was provided by Google.
 
-\subsubsection{Goals}
+%\subsubsection{Goals}
 
 Following our motivation to build browserCloudjs in the first place, that is, to provide a way to take advantage of the volunteer computing paradigm, using the idle resources available on user machines, leveraging the capabilities that offered to us by the Web Platform, we set ouselves with some goals to prove if our solution is viable, through:
 
@@ -39,9 +38,9 @@ Following our motivation to build browserCloudjs in the first place, that is, to
     \item Assessing if there are significant speedups
 \end{itemize}
 
-\subsubsection{Results}
+%\subsubsection{Results}
 
-We have perfomed tests in order to assess:
+We have performed tests in order to assess:
 
 \begin{itemize}
     \item Time elapsed during a distributed ray-tracing job, checking for how it changed when we increased the number of browsers and the level of granularity in which we divided the job. Seen in Figures~\ref{fig:ray25}~,~\ref{fig:ray2500}~,~\ref{fig:ray25time}~and~\ref{fig:ray2500time}.
@@ -94,7 +93,7 @@ We have perfomed tests in order to assess:
   \label{fig:rtt}
 \end{figure}
 
-\subsubsection{Analysis}
+%\subsubsection{Analysis}
 
 The standard ray-tracing job using the algorithm developed, running in a single browser takes as median 23610.434ms to complete. As we can see in Figures~\ref{fig:ray2500}~and~\ref{fig:ray2500time}, our system excels in delivering faster results by dividing the job up to 2500 computational units (or tasks) and requesting from the browsers available in the network to compute those (i.e., a rectangle of the resulting output image). This is expected as ray-tracing is a known case of an embarrassingly parallel application.
 
@@ -102,11 +101,11 @@ One fact interesting to note is that we obtained much better results by reducing
 
 In a real world example, the actual execution time would be bounded by:\\
 
-$\textbf{jobTime}=slowestDelayFromResourceDiscovery+timeOfExecutingSlowestTask+slowestDelayFromResultReply (1)$ \\
+$\textbf{jobTime}=slowestDelayFromResourceDiscovery +\\timeOfExecutingSlowestTask+slowestDelayFromResultReply (1)$ \\
 
 with full parallelism, where in our test scenario we have: \\
 
-$\textbf{jobTime}=\sum{DelayFromResourceDiscovery}+(TimeOfExecuting\_N\_Tasks\_on\_M\_Resources)+\sum{DelayFromResultReply} (2)$\\
+$\textbf{jobTime}=\sum{DelayFromResourceDiscovery} +\\(TimeOfExecuting\_N\_Tasks\_on\_M\_Resources) + \\\sum{DelayFromResultReply} (2)$\\
 
 where N=2500 and M=8 hardware threads, therefore contention for CPU becomes higher with more nodes (browsers) as more messaging is taking place, besides the parallelized computation.
 
@@ -114,7 +113,7 @@ In a real world scenario, with more browsers from more machines, the total execu
 
 It is important to note that in Figure~\ref{fig:avgtimeexec}, we can see several task execution lengths due to the complexity of each task, with more or less light reflections. With this microbenchmark we see that the execution time of each task, without any resource contention (1 node = 1 browser per machine), the task duration has an even lower upper bound (lower than 5s). This would entail the upper bound of total task execution time to be under 5061 ms (around just 5s), with a theoretical speedup of about 4.6 times (take into account that we would be using 2500 nodes then, so speedups are not perfectly linear due to communication overhead, as expected).
 
-\subsubsection{Inference}
+%\subsubsection{Inference}
 
 As we have discussed in the previous subsections, we did managed to reach significant speedup between 2 and close to 5 times for our experiment, using only volunteer resources, that is a reduction between 50\% and 76\%.
 

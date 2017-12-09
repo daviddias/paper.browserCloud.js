@@ -12,57 +12,37 @@ Cloud Computing tries to answer the demand for storage and computing power, revo
     \item Simple, portable internet service based interfaces, straightforward for non expert users, enabling adoption and use of cloud services without any prior training.
 \end{itemize}
 
-Grid computing had offered before a solution for high CPU bound computations, however it had high entry barriers, being necessary to have a large infrastructure even if just to execute small or medium size computing jobs. Cloud computing solves this by offering a solution ``pay-as-you-go'' transforming computing into an utility.
+Grid computing had offered before a solution for high CPU bound computations, however it had high entry barriers, being necessary to have a large infrastructure even if just to execute small or medium size computing jobs. Cloud computing solves this by offering a solution ``pay-as-you-go'' transforming computing into a utility.
 
-Although we are able to integrate several Cloud providers into an open software stack, Cloud Computing relies nowadays on centralized architectures, resorting to data centers using mainly the Client-Server model. In this work, we pursue a shift to this paradigm, bridging the worlds of decentralized communications with efficient resource discovery capabilities, in a platform that is ubiquitous and powerful that is the Web Platform.
-
-\subsection{Problem Statement}
+Although we are able to integrate several Cloud providers into an open software stack, Cloud Computing relies nowadays on centralized architectures, resorting to data centers using mainly the Client-Server model. In this work, we pursue a shift in this paradigm, bridging the worlds of decentralized communications with efficient resource discovery capabilities, in a platform as ubiquitous and powerful as the Web Platform.
 
 There is a large untapped source of volunteered shared resources that can be used as a cheaper alternative to large computing platforms.
-
-\subsubsection{Current Shortcomings}
 
 We have identified several issues with current solutions, these are:
 
 \begin{itemize}
     \item Typical resource sharing networks do not offer an interface for a user to act as a consumer and contributor at the same time.
-    \item Interoperability is not a priotity.
+    \item Interoperability is not a priority.
     \item There is a high level of entrance cost for a user to contribute to one resource sharing network.
     \item Load balancing strategies for volunteer computing networks are based on centralized control,  often not using the resources available efficiently and effectively.
     \item Centralized Computing platforms have scalability problems as the network and resource usage grows.
 \end{itemize}
 
-\subsection{Research Proposal}
+%\subsection{Research Proposal}
 
-To solve these issues, we propose a new approach that abandons the classic centralized Cloud Computing paradigm to a fully decentralized architecture, federating freely ad-hoc distributed and heterogeneous resources, with direct resource usage and progress report. Additional goals include: arbitration, service-level agreements, resource handover, compatibility and maximization of host's and user's criteria, and cost- and carbon-efficiency models.
+To solve these issues, we propose a new approach that abandons the classic centralized Cloud Computing paradigm to a fully decentralized architecture, federating freely ad-hoc distributed and heterogeneous resources, with direct resource usage and progress report. This work aims to address extending the Web Platform with technologies such as WebRTC, Emscripten, Javascript and IndexedDB to create a structured peer-to-peer overlay network, federating standard Web Browsers into a geo-distributed cloud infrastructure.\footnote{The code for this project is MIT Licensed and available at: https://github.com/diasdavid/webrtc-explorer}
 
-This work will address extending the Web Platform with technologies such as: WebRTC, Emscripten, Javascript and IndexedDB to create a structured peer-to-peer overlay network, federating standard Web Browsers into a geo-distributed cloud infrastructure, representing the definition made by C.Shirky of what an peer-to-peer means:
+We start by presenting in Section. 2, the state of the art for the technologies and areas of study relevant for the proposed work, which are: Cloud computing and Open Source Cloud Platforms (at 2.1), Volunteered Resource Sharing (at 2.2) and Resource sharing using the Web platform (at 2.3). In Section 3 we present the architecture and respective software stack, moving to Implementation details in Section 4 and system evaluation present on Section 5. Section 6 concludes the paper.
 
-  \textit{``An application is peer-to-peer if it aggregates resources at the network’s edge, and those resources can be anything. It can be content, it can be cycles, it can be storage space, it can be human presence.''}, C.Shirky \cite{Shirky.}
+%\subsection{Publications, Presentations and References}
+%
+%We witnessed a new thread in Javascript, Node.js, WebRTC and essencially in the Web Open Source communities to move to a model where contributions to the ecosystem are measured by their ability to be used by other projects, reviewed and studied from their internals and easy to use. We have fully adhered to and adopted this mindset since the beginning of browserCloud.js development, taking the project to the community and collecting feedback early and often, getting other developers excited to use the platform. In this process, we've achieved:
+%
+%\begin{itemize}
+  %\item Talk at Data Terra Nemo\footnote{http://dtn.is/}, P2P Conf in Berlin, Germany.
+  %\item Talk delivered at OpoJS, Oporto, Portugal. The recording was published\footnote{https://www.youtube.com/watch?v=fNQGGGE\_\_zI}
+  %\item WebRTC Weekly Issue \#60 mention, the number one WebRTC newsletter with more than 1000 subscribers (https://webrtcweekly.com/issue/webrtc-weekly-issue-60/).
+  %\item Number one top article in EchoJS for 3 days in a row and Top-5 for 7 days. (http://www.echojs.com/news/14009)
+%\end{itemize}
 
-\subsection{Structure and Roadmap}
 
-We start by presenting in Section. 2, the state of the art for the technologies and areas of study relevant for the proposed work, which are: Cloud computing and Open Source Cloud Platforms (at 2.1), Volunteered Resource Sharing (at 2.2) and Resource sharing using the Web platform (at 2.3). In Section 3 we present the architecture and respective software stack, moving to Implementation details in Section 4 and system evaluation present on Section 5.
-
-\subsection{Publications, Presentations and References}
-
-We witnessed a new thread in Javascript, Node.js, WebRTC and essencially in the Web Open Source communities to move to a model where contributions to the ecosystem are measured by their ability to be used by other projects, reviewed and studied from their internals and easy to use. We have fully adhered to and adopted this mindset since the beginning of browserCloud.js development, taking the project to the community and collecting feedback early and often, getting other developers excited to use the platform. In this process, we've achieved:
-
-\begin{itemize}
-  \item Talk at Data Terra Nemo\footnote{http://dtn.is/}, P2P Conf in Berlin, Germany.
-  \item Talk delivered at OpoJS, Oporto, Portugal. The recording was published\footnote{https://www.youtube.com/watch?v=fNQGGGE\_\_zI}
-  \item WebRTC Weekly Issue \#60 mention, the number one WebRTC newsletter with more than 1000 subscribers (https://webrtcweekly.com/issue/webrtc-weekly-issue-60/).
-  \item Number one top article in EchoJS for 3 days in a row and Top-5 for 7 days. (http://www.echojs.com/news/14009)
-\end{itemize}
-
-The code for this project is MIT Licensed and available at:
-
-\begin{itemize}
-  \item https://github.com/diasdavid/webrtc-explorer
-  \item https://github.com/diasdavid/webrtc-explorer-signalling-server
-  \item https://github.com/diasdavid/webrtc-explorer-visualizer
-  \item https://github.com/diasdavid/webrtc-explorer-simulator
-  \item https://github.com/diasdavid/webrtc-explorer-peer-id
-  \item https://github.com/diasdavid/webrtc-explorer-browser-process
-  \item https://github.com/diasdavid/simple-raytracer
-\end{itemize}
